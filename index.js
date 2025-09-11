@@ -1,45 +1,55 @@
-import fs from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
 import express from "express";
-const app = express();
 
-async function readFile(filename) {
-	try {
-		const data = await fs.readFile(filename, "utf8");
-		return data;
-	} catch (err) {
-		console.error(err);
-	}
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
 
 let filepath = "";
 
-app.get("/", async (req, res) => {
-	filepath = "pages/index.html";
+const options = { root: path.join(__dirname, "pages") };
 
-	const html = await readFile(filepath);
-	res.send(html);
+app.get("/", (req, res) => {
+	filepath = "index.html";
+
+	res.sendFile(filepath, options, (err) => {
+		if (err) {
+			throw err;
+		}
+	});
 });
 
 app.get("/about", async (req, res) => {
-	filepath = "pages/about.html";
+	filepath = "about.html";
 
-	const html = await readFile(filepath);
-	res.send(html);
+	res.sendFile(filepath, options, (err) => {
+		if (err) {
+			throw err;
+		}
+	});
 });
 
 app.get("/contact-me", async (req, res) => {
-	filepath = "pages/contact-me.html";
+	filepath = "contact-me.html";
 
-	const html = await readFile(filepath);
-	res.send(html);
+	res.sendFile(filepath, options, (err) => {
+		if (err) {
+			throw err;
+		}
+	});
 });
 
 app.get(/\/*/, async (req, res) => {
-	filepath = "pages/404.html";
+	filepath = "404.html";
 
-	const html = await readFile(filepath);
-	res.send(html);
+	res.sendFile(filepath, options, (err) => {
+		if (err) {
+			throw err;
+		}
+	});
 });
 
 const PORT = 8000;
