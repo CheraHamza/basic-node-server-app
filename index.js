@@ -1,5 +1,7 @@
-import http from "node:http";
 import fs from "node:fs/promises";
+
+import express from "express";
+const app = express();
 
 async function readFile(filename) {
 	try {
@@ -10,35 +12,42 @@ async function readFile(filename) {
 	}
 }
 
-const server = http.createServer();
+let filepath = "";
 
-server.on("request", async (request, res) => {
-	res.statusCode = 200;
-	res.setHeader("Content-Type", "text/html");
-
-	let filepath = "";
-	switch (request.url) {
-		case "/":
-			filepath = "pages/index.html";
-			break;
-
-		case "/about":
-			filepath = "pages/about.html";
-			break;
-
-		case "/contact-me":
-			filepath = "pages/contact-me.html";
-			break;
-
-		default:
-			filepath = "pages/404.html";
-			break;
-	}
+app.get("/", async (req, res) => {
+	filepath = "pages/index.html";
 
 	const html = await readFile(filepath);
-	res.end(html);
+	res.send(html);
 });
 
-server.listen(8000, () => {
-	console.log("server running at localhost:8000/ ...");
+app.get("/about", async (req, res) => {
+	filepath = "pages/about.html";
+
+	const html = await readFile(filepath);
+	res.send(html);
+});
+
+app.get("/contact-me", async (req, res) => {
+	filepath = "pages/contact-me.html";
+
+	const html = await readFile(filepath);
+	res.send(html);
+});
+
+app.get(/\/*/, async (req, res) => {
+	filepath = "pages/404.html";
+
+	const html = await readFile(filepath);
+	res.send(html);
+});
+
+const PORT = 8000;
+
+app.listen(PORT, (error) => {
+	if (error) {
+		throw error;
+	}
+
+	console.log(`Server listening on port ${PORT}...`);
 });
