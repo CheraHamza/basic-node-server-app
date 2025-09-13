@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 	});
 });
 
-app.get("/about", async (req, res) => {
+app.get("/about", (req, res) => {
 	filepath = "about.html";
 
 	res.sendFile(filepath, options, (err) => {
@@ -32,7 +32,7 @@ app.get("/about", async (req, res) => {
 	});
 });
 
-app.get("/contact-me", async (req, res) => {
+app.get("/contact-me", (req, res) => {
 	filepath = "contact-me.html";
 
 	res.sendFile(filepath, options, (err) => {
@@ -42,7 +42,7 @@ app.get("/contact-me", async (req, res) => {
 	});
 });
 
-app.get(/\/*/, async (req, res) => {
+app.get(/\/*/, (req, res) => {
 	filepath = "404.html";
 
 	res.sendFile(filepath, options, (err) => {
